@@ -7,8 +7,7 @@
 ### 依赖
 #### posix.so
 
-### 参数配置
-#### 启动文件
+### 启动文件配置
 
 start.php
 
@@ -24,6 +23,7 @@ Wrapper::$file = "./shell/testShell.php";
 
 Wrapper::run();
 
-启动start.php
+
+### 启动start.php
 
 php ./start.php start
