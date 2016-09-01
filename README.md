@@ -10,11 +10,9 @@ start.php
 
 //加载文件
 require_once './wrapper/wrapper.php';
-
 Wrapper::$daemonize = true;
 Wrapper::$masterPidPath = '/tmp/testShell.pid';
 Wrapper::$file = "./shell/testShell.php";
-
 Wrapper::run();
 
 
