@@ -255,6 +255,7 @@ class Wrapper{
 	private static function displayInfo(){
         echo "============================\033[47;30m Wrapper \033[0m============================\n";
 		echo str_pad("Wrapper版本:" ,15," "), Wrapper::VERSION,"\n";
+		echo str_pad("当前时间:",15," "),date('Y-m-d H:i:s'),"\n";
 		echo str_pad("PHP版本:",15," "),PHP_VERSION,"\n";
 		echo str_pad("执行脚本:",15," "),self::$file,"\n";
 		if(self::$status == Wrapper::RUNNING && self::$daemonize){
