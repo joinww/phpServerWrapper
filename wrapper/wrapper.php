@@ -25,10 +25,9 @@ class Wrapper{
 	 * @return [type] [description]
 	 */
 	public static function run(){
-
 		self::init();
 		self::parseCommand();
-		self::execute();
+		self::execute();	
 	}
 
 	private static function init(){
@@ -62,9 +61,7 @@ class Wrapper{
 		//自动生成pid文件名,这里不要改动
 		$pathInfo = pathinfo(self::$file);
 		$masterPidPath = str_replace('.','_',$pathInfo['filename']);		
-		self::$pidFile = "/tmp/$masterPidPath.pid";
-
-		self::setProcName("PHP Wrapper @ ".self::$file);
+		self::$pidFile = sys_get_temp_dir()."/$masterPidPath.pid";
 	}
 
 	/**
@@ -102,9 +99,9 @@ class Wrapper{
 
 		self::isStart();
 		self::displayInfo();
-		//判断是否已守护进程执行
-		self::daemonize();
+		//判断是否已守护进程执行	
 		self::resetStd();
+		self::daemonize();
 		self::saveMasterPid();
 
 		require_once self::$file;
@@ -122,7 +119,7 @@ class Wrapper{
 	        shell_exec("kill -9 $masterPid");
 
 	        //清空pid
-	        file_put_contents(self::$pidFile,"");
+	        @unlink(self::$pidFile);
 		
 			self::$status = Wrapper::STOP;
 			self::displayInfo();
@@ -136,7 +133,7 @@ class Wrapper{
 	 * @return [type] [description]
 	 */
 	private static function getPidFromFile(){
-		if(self::$pidFile){			
+		if(file_exists(self::$pidFile)){			
 			return file_get_contents(self::$pidFile);
 		}
 	}
@@ -235,6 +232,8 @@ class Wrapper{
         if($pid > 0)
         {
             exit(0);
+        }else{
+			self::setProcName("PHP Wrapper Process @ ".self::$file);
         }
     }
 
@@ -259,7 +258,7 @@ class Wrapper{
 		echo str_pad("PHP版本:",15," "),PHP_VERSION,"\n";
 		echo str_pad("执行脚本:",15," "),self::$file,"\n";
 		if(self::$status == Wrapper::RUNNING && self::$daemonize){
-			echo str_pad("进程PID路径:",15," "),self::pidFile,"\n";
+			echo str_pad("进程PID路径:",15," "),self::$pidFile,"\n";
 		}
 		echo str_pad("运行状态:",15," "),"\033[42;37m[",self::$status," SUCCESS]\033[0m\n";
 
