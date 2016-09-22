@@ -232,6 +232,13 @@ class Wrapper{
         if($pid > 0)
         {
             exit(0);
+        }
+
+        posix_setsid();
+        
+        $pid = pcntl_fork();
+        if($pid > 0){
+        	exit(0);
         }else{
 			self::setProcName("PHP Wrapper Process @ ".self::$file);
         }
