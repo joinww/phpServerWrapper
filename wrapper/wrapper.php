@@ -31,9 +31,8 @@ class Wrapper{
 	}
 
 	private static function init(){
-		if(empty(self::$logFile))
-        {
-            self::$logFile = __DIR__ . '/../wrapper.log';
+		if(empty(self::$logFile)){
+        	self::$logFile = __DIR__ . '/../wrapper.log';
         }
 	}
 
@@ -116,7 +115,7 @@ class Wrapper{
 		$masterPid = self::getPidFromFile();
 
 		if( $masterPid >0 ){
-	        shell_exec("kill -9 $masterPid");
+			shell_exec("kill -9 $masterPid");
 
 	        //清空pid
 	        @unlink(self::$pidFile);
@@ -176,17 +175,14 @@ class Wrapper{
 		global $STDIN,$STDOUT;
 
 		$handle = fopen(self::$logFile,"a");
-        if($handle) 
-        {
-            unset($handle);
-            @fclose(STDOUT);
-            @fclose(STDERR);
-            $STDOUT = fopen(self::$logFile,"a");
-            $STDERR = fopen(self::$logFile,"a");
-        }
-        else
-        {
-            exit("日志文件".self::$logFile."不存在；");
+		if($handle){
+			unset($handle);
+			@fclose(STDOUT);
+			@fclose(STDERR);
+			$STDOUT = fopen(self::$logFile,"a");
+			$STDERR = fopen(self::$logFile,"a");
+        }else{
+        	exit("日志文件".self::$logFile."不存在；");
         }
 
 	}
@@ -223,15 +219,13 @@ class Wrapper{
      */
     protected static function daemonize()
     {
-        if(!self::$daemonize)
-        {
-            return;
+        if(!self::$daemonize){
+        	return;
         }
 
         $pid = pcntl_fork();
-        if($pid > 0)
-        {
-            exit(0);
+        if($pid > 0){
+        	exit(0);
         }
 
         posix_setsid();
@@ -240,7 +234,7 @@ class Wrapper{
         if($pid > 0){
         	exit(0);
         }else{
-			self::setProcName("PHP Wrapper Process @ ".self::$file);
+        	self::setProcName("PHP Wrapper Process @ ".self::$file);
         }
     }
 
@@ -252,15 +246,14 @@ class Wrapper{
     	if(function_exists("cli_set_process_title")){
     		@cli_set_process_title($title);
     	}
-        elseif(extension_loaded('proctitle') && function_exists('setproctitle'))
-        {
-            @setproctitle($title);
+        elseif(extension_loaded('proctitle') && function_exists('setproctitle')){
+        	@setproctitle($title);
         }
     }
 
 
 	private static function displayInfo(){
-        echo "============================\033[47;30m Wrapper \033[0m============================\n";
+		echo "============================\033[47;30m Wrapper \033[0m============================\n";
 		echo str_pad("Wrapper版本:" ,15," "), Wrapper::VERSION,"\n";
 		echo str_pad("当前时间:",15," "),date('Y-m-d H:i:s'),"\n";
 		echo str_pad("PHP版本:",15," "),PHP_VERSION,"\n";
